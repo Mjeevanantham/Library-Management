@@ -1,15 +1,15 @@
 import entity.Books;
 import entity.Users;
-
 import java.util.*;
 
-import utiles.common;
-import utiles.common.SubType;
+import utiles.Genre;
+import utiles.bookStatus;
+import utiles.subscriptionType;
 
 public class Library {
-    public static ArrayList<Books> books = new ArrayList<>();
-    public static ArrayList<String> borrowedBooks = new ArrayList<>();
-    public static HashMap<String, Users> users = new HashMap<>();
+    public static List<Books> books = new ArrayList<>();
+    public static List<String> borrowedBooks = new ArrayList<>();
+    public static Map<String, Users> users = new HashMap<>();
 
     public static void main(String[] args) {
         Book bookClass = new Book();
@@ -18,12 +18,12 @@ public class Library {
             Scanner sc = new Scanner(System.in);
             boolean exit = false;
 
-            users.put("ATS112", new Users("Jeeva", "jeeva@gmail.com", SubType.FREE));
-            users.put("ATS113", new Users("Jeya", "jeya@gmail.com", SubType.PRO));
-            users.put("ATS114", new Users("Pranav", "pranav@gmail.com", SubType.FREE));
+            users.put("ATS112", new Users("Jeeva", "jeeva@gmail.com", subscriptionType.FREE, 2));
+            users.put("ATS113", new Users("Kabil", "Kabil@gmail.com", subscriptionType.PRO, 3));
+            users.put("ATS114", new Users("Pranav", "pranav@gmail.com", subscriptionType.FREE, 2));
 
-            books.add(new Books(1, "Rich Dad Poor Dad", "Robert Kiyosaki", "Finance"));
-            books.add(new Books(2, "Money", "Yuval Noah Harari", "Economics"));
+            books.add(new Books(1, "Rich Dad Poor Dad", "Robert Kiyosaki", Genre.SCI_FI, bookStatus.AVAILABLE));
+            books.add(new Books(2, "Money", "Yuval Noah Harari", Genre.NOVEL, bookStatus.AVAILABLE));
 
             while (!exit) {
                 System.out.println("========================== Library Management ===========================");

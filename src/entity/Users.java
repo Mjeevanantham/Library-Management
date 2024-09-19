@@ -1,19 +1,24 @@
 package entity;
 
-import utiles.common.SubType;
+import utiles.subscriptionType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Users {
-    private String name;
-    private String email;
-    private SubType subType;
+    private final String name;
+    private final String email;
+    private final subscriptionType subType;
+    private int borrowLimit;
+    private final List<Books> booksBorrowed = new ArrayList<>();
 
-    public Users(String name, String email, SubType subType) {
+    public Users(String name, String email, subscriptionType subType, int borrowLimit) {
         this.name = name;
         this.email = email;
         this.subType = subType;
+        this.borrowLimit = borrowLimit;
     }
 
-    // Getters and Setters
     public String getName() {
         return name;
     }
@@ -22,8 +27,28 @@ public class Users {
         return email;
     }
 
-    public SubType getSubType() {
+    public subscriptionType getSubType() {
         return subType;
+    }
+
+    public int getBorrowLimit() {
+        return borrowLimit;
+    }
+
+    public void setBorrowLimit(int borrowLimit) {
+        this.borrowLimit = borrowLimit;
+    }
+
+    public List<Books> getBorrowedBooks() {
+        return booksBorrowed;
+    }
+
+    public void addBorrowedBook(Books borrowedBook) {
+        this.booksBorrowed.add(borrowedBook);
+    }
+
+    public void removeBorrowedBook(Books returnedBook) {
+        this.booksBorrowed.remove(returnedBook);
     }
 
     @Override

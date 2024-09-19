@@ -1,16 +1,20 @@
 package entity;
+import utiles.Genre;
+import utiles.bookStatus;
 
 public class Books {
     private int id;
     private String title;
     private String author;
-    private String genre;
+    private Genre genre;
+    private bookStatus status;
 
-    public Books(int id, String title, String author, String genre) {
+    public Books(int id, String title, String author, Genre genre, bookStatus status) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.genre = genre;
+        this.status = status;
     }
 
     public int getId() {
@@ -37,12 +41,20 @@ public class Books {
         this.author = author;
     }
 
-    public String getGenre() {
+    public Genre getGenre() {
         return genre;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(Genre genre) {
         this.genre = genre;
+    }
+
+    public bookStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(bookStatus status) {
+        this.status = status;
     }
 
     @Override

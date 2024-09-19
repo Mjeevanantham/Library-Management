@@ -1,9 +1,10 @@
 import java.util.Scanner;
-
 import entity.Books;
+import entity.Users;
+import utiles.Genre;
+import utiles.bookStatus;
 
 public class Book {
-
     public static void addBook(Scanner sc) {
         System.out.print("Enter User ID: ");
         String userId = sc.nextLine();
@@ -19,9 +20,14 @@ public class Book {
             String bookAuthor = sc.nextLine();
 
             System.out.print("Enter the book genre: ");
+            System.out.print("Enter the book genre: ");
             String bookGenre = sc.nextLine();
+            if(getGenreType(bookGenre) == null)
+            {
+                System.out.print("Enter the book status: ");
 
-            Books newBook = new Books(bookId, bookName, bookAuthor, bookGenre);
+            }
+            Books newBook = new Books(bookId, bookName, bookAuthor, getGenreType(bookGenre), bookStatus.AVAILABLE);
             Library.books.add(newBook);
             System.out.println("Book added successfully!");
         } else {
@@ -37,7 +43,11 @@ public class Book {
             System.out.println("User not found! Please register first.");
             return;
         }
-
+        Users user = Library.users.get(userId);
+        if (user.getBorrowedBooks() != null && user.getBorrowedBooks().size() >= user.getBorrowLimit()) {
+            System.out.println("You have reached your borrow limit! Please return a book before borrowing another.");
+            return;
+        }
         System.out.print("Enter the title of the book to be borrowed: ");
         String bookName = sc.nextLine();
 
@@ -48,10 +58,16 @@ public class Book {
                 break;
             }
         }
+        if (borrowedBook == null) {
+            System.out.println("Oops! Book not found!");
+        }
 
         if (borrowedBook != null) {
             Library.books.remove(borrowedBook);
             Library.borrowedBooks.add(borrowedBook.getTitle());
+            user.addBorrowedBook(borrowedBook);
+            user.setBorrowLimit(user.getBorrowLimit() - 1);
+            System.out.println(">>>> " + user.getBorrowedBooks());
             System.out.println("Book borrowed successfully!");
         } else {
             System.out.println("Book not available!");
@@ -67,26 +83,30 @@ public class Book {
             return;
         }
 
-        System.out.print("Enter the title of the book to return: ");
+        Users user = Library.users.get(userId);
+
+        System.out.print("Enter the title of the book to be returned: ");
         String bookName = sc.nextLine();
 
-        if (Library.borrowedBooks.contains(bookName)) {
-            Library.borrowedBooks.remove(bookName);
-
-            System.out.print("Enter the book ID: ");
-            int bookId = sc.nextInt();
-            sc.nextLine();
-            System.out.print("Enter the author: ");
-            String author = sc.nextLine();
-            System.out.print("Enter the genre: ");
-            String genre = sc.nextLine();
-
-            Books returnedBook = new Books(bookId, bookName, author, genre);
-            Library.books.add(returnedBook);
-            System.out.println("Book returned successfully!");
-        } else {
-            System.out.println("This book was not borrowed.");
+        Books returnedBook = null;
+        for (Books book : user.getBorrowedBooks()) {
+            if (book.getTitle().equalsIgnoreCase(bookName)) {
+                returnedBook = book;
+                break;
+            }
         }
+
+        if (returnedBook == null) {
+            System.out.println("This book was not borrowed by the user.");
+            return;
+        }
+
+        user.removeBorrowedBook(returnedBook);
+        user.setBorrowLimit(user.getBorrowLimit() + 1);
+
+        Library.books.add(returnedBook);
+
+        System.out.println("Book returned successfully!");
     }
 
     public static void viewBooks(Scanner sc) {
@@ -119,6 +139,18 @@ public class Book {
                 break;
             default:
                 System.out.println("Invalid option!");
+        }
+    }
+
+    private static Genre getGenreType(String genreInput) {
+        if (genreInput.equalsIgnoreCase("Sci-fi")) {
+            return Genre.SCI_FI;
+        } else if (genreInput.equalsIgnoreCase("Novel")) {
+            return Genre.NOVEL;
+        } else if (genreInput.equalsIgnoreCase("Mystery")) {
+            return Genre.MYSTERY;
+        } else {
+            return null;
         }
     }
 }
