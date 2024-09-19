@@ -25,6 +25,7 @@ public class AppConstants {
     public static final String SUCCESS_BOOK_RETURNED = "Book returned successfully!";
     public static final String SUCCESS_USER_REGISTERED = "User registered successfully!";
 
+    // Prompt messages
     public static final String PROMPT_ENTER_USER_ID = "Enter User ID (ex: ATS112): ";
     public static final String PROMPT_ENTER_BOOK_TITLE = "Enter the title of the book: ";
     public static final String PROMPT_ENTER_BOOK_AUTHOR = "Enter the book author: ";
