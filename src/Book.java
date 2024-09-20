@@ -1,54 +1,51 @@
 import java.util.Scanner;
+
 import entity.Books;
 import entity.Users;
+import utiles.AppConstants;
 import utiles.Genre;
 import utiles.bookStatus;
 
 public class Book {
     public static void addBook(Scanner sc) {
-        System.out.print("Enter User ID: ");
+        System.out.print(AppConstants.PROMPT_ENTER_USER_ID);
         String userId = sc.nextLine();
         if (Library.users.containsKey(userId)) {
-            System.out.print("Enter the book ID: ");
-            int bookId = sc.nextInt();
-            sc.nextLine();
 
-            System.out.print("Enter the title of the book: ");
+            System.out.print(AppConstants.PROMPT_ENTER_BOOK_TITLE);
             String bookName = sc.nextLine();
 
-            System.out.print("Enter the book author: ");
+            System.out.print(AppConstants.PROMPT_ENTER_BOOK_AUTHOR);
             String bookAuthor = sc.nextLine();
 
-            System.out.print("Enter the book genre: ");
-            System.out.print("Enter the book genre: ");
+            System.out.print(AppConstants.PROMPT_ENTER_BOOK_GENRE);
             String bookGenre = sc.nextLine();
-            if(getGenreType(bookGenre) == null)
-            {
-                System.out.print("Enter the book status: ");
-
+            if (getGenreType(bookGenre) == null) {
+                System.out.print(AppConstants.ENTER_VALID_GENRE);
+                return;
             }
-            Books newBook = new Books(bookId, bookName, bookAuthor, getGenreType(bookGenre), bookStatus.AVAILABLE);
+            Books newBook = new Books(bookName, bookAuthor, getGenreType(bookGenre), bookStatus.AVAILABLE);
             Library.books.add(newBook);
-            System.out.println("Book added successfully!");
+            System.out.println(AppConstants.SUCCESS_BOOK_ADDED);
         } else {
-            System.out.println("Oops!! User not found!");
+            System.out.println(AppConstants.ERROR_USER_NOT_FOUND);
         }
     }
 
     public static void borrowBook(Scanner sc) {
-        System.out.print("Enter User ID (ex: ATS112): ");
+        System.out.print(AppConstants.PROMPT_ENTER_USER_ID);
         String userId = sc.nextLine();
 
         if (!Library.users.containsKey(userId)) {
-            System.out.println("User not found! Please register first.");
+            System.out.println(AppConstants.ERROR_USER_NOT_FOUND);
             return;
         }
         Users user = Library.users.get(userId);
-        if (user.getBorrowedBooks() != null && user.getBorrowedBooks().size() >= user.getBorrowLimit()) {
-            System.out.println("You have reached your borrow limit! Please return a book before borrowing another.");
+        if (user.getBorrowLimit() == 0) {
+            System.out.println(AppConstants.ERROR_BORROW_LIMIT_REACHED);
             return;
         }
-        System.out.print("Enter the title of the book to be borrowed: ");
+        System.out.print(AppConstants.PROMPT_ENTER_BOOK_TITLE);
         String bookName = sc.nextLine();
 
         Books borrowedBook = null;
@@ -59,7 +56,7 @@ public class Book {
             }
         }
         if (borrowedBook == null) {
-            System.out.println("Oops! Book not found!");
+            System.out.println(AppConstants.ERROR_BOOK_NOT_FOUND);
         }
 
         if (borrowedBook != null) {
@@ -67,25 +64,24 @@ public class Book {
             Library.borrowedBooks.add(borrowedBook.getTitle());
             user.addBorrowedBook(borrowedBook);
             user.setBorrowLimit(user.getBorrowLimit() - 1);
-            System.out.println(">>>> " + user.getBorrowedBooks());
-            System.out.println("Book borrowed successfully!");
+            System.out.println(AppConstants.SUCCESS_BOOK_BORROWED);
         } else {
-            System.out.println("Book not available!");
+            System.out.println(AppConstants.ERROR_BOOK_NOT_FOUND);
         }
     }
 
     public static void returnBook(Scanner sc) {
-        System.out.print("Enter User ID (ex: ATS112): ");
+        System.out.print(AppConstants.PROMPT_ENTER_USER_ID);
         String userId = sc.nextLine();
 
         if (!Library.users.containsKey(userId)) {
-            System.out.println("User not found!");
+            System.out.println(AppConstants.ERROR_USER_NOT_FOUND);
             return;
         }
 
         Users user = Library.users.get(userId);
 
-        System.out.print("Enter the title of the book to be returned: ");
+        System.out.print(AppConstants.PROMPT_ENTER_BOOK_TITLE);
         String bookName = sc.nextLine();
 
         Books returnedBook = null;
@@ -97,7 +93,7 @@ public class Book {
         }
 
         if (returnedBook == null) {
-            System.out.println("This book was not borrowed by the user.");
+            System.out.println(AppConstants.ERROR_NOT_BORROWED);
             return;
         }
 
@@ -106,13 +102,13 @@ public class Book {
 
         Library.books.add(returnedBook);
 
-        System.out.println("Book returned successfully!");
+        System.out.println(AppConstants.SUCCESS_BOOK_RETURNED);
     }
 
     public static void viewBooks(Scanner sc) {
         System.out.println("1: Available Books");
         System.out.println("2: Borrowed Books");
-        System.out.print("Enter your choice: ");
+        System.out.print(AppConstants.PROMPT_ENTER_CHOICE);
         int subChoice = sc.nextInt();
         sc.nextLine();
 
@@ -123,7 +119,7 @@ public class Book {
                 } else {
                     System.out.println("Available Books:");
                     for (Books book : Library.books) {
-                        System.out.println("- " + book);
+                        System.out.println("✅ " + book);
                     }
                 }
                 break;
@@ -133,7 +129,7 @@ public class Book {
                 } else {
                     System.out.println("Borrowed Books:");
                     for (String book : Library.borrowedBooks) {
-                        System.out.println("- " + book);
+                        System.out.println("❌ " + book);
                     }
                 }
                 break;

@@ -1,7 +1,10 @@
 import entity.Books;
 import entity.Users;
+
 import java.util.*;
 
+import utiles.AppConstants;
+import utiles.AppConstants.*;
 import utiles.Genre;
 import utiles.bookStatus;
 import utiles.subscriptionType;
@@ -22,21 +25,22 @@ public class Library {
             users.put("ATS113", new Users("Kabil", "Kabil@gmail.com", subscriptionType.PRO, 3));
             users.put("ATS114", new Users("Pranav", "pranav@gmail.com", subscriptionType.FREE, 2));
 
-            books.add(new Books(1, "Rich Dad Poor Dad", "Robert Kiyosaki", Genre.SCI_FI, bookStatus.AVAILABLE));
-            books.add(new Books(2, "Money", "Yuval Noah Harari", Genre.NOVEL, bookStatus.AVAILABLE));
+            books.add(new Books("Rich Dad Poor Dad", "Robert", Genre.SCI_FI, bookStatus.AVAILABLE));
+            books.add(new Books("Basketball", "Lebron james", Genre.NOVEL, bookStatus.AVAILABLE));
+            books.add(new Books("Football", "Messi", Genre.NOVEL, bookStatus.AVAILABLE));
 
             while (!exit) {
-                System.out.println("========================== Library Management ===========================");
-                System.out.println("1: Add Books");
-                System.out.println("2: Borrow Books");
-                System.out.println("3: Return Books");
-                System.out.println("4: View All Books");
-                System.out.println("5: User Registration");
-                System.out.println("6: View All Users");
-                System.out.println("7: Exit");
-                System.out.println("=========================================================================");
+                System.out.println(AppConstants.MENU_HEADER);
+                System.out.println(AppConstants.MENU1);
+                System.out.println(AppConstants.MENU2);
+                System.out.println(AppConstants.MENU3);
+                System.out.println(AppConstants.MENU4);
+                System.out.println(AppConstants.MENU5);
+                System.out.println(AppConstants.MENU6);
+                System.out.println(AppConstants.MENU7);
+                System.out.println(AppConstants.MENU_FOOTER);
 
-                System.out.print("Enter your choice: ");
+                System.out.print(AppConstants.PROMPT_ENTER_CHOICE);
                 int choice = sc.nextInt();
                 sc.nextLine();
 
@@ -61,15 +65,14 @@ public class Library {
                         break;
                     case 7:
                         exit = true;
-                        System.out.println("Exiting the Library Management System. Goodbye!");
+                        System.out.println(AppConstants.BYE_MESSAGE);
                         break;
                     default:
-                        System.out.println("Please enter a valid option!");
+                        System.out.println(AppConstants.ERROR_INVALID_INPUT);
                 }
             }
             sc.close();
         } catch (Exception e) {
-            System.out.println(e);
             System.out.println("Something went wrong!");
         }
     }

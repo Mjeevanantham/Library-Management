@@ -1,27 +1,34 @@
 package entity;
+
 import utiles.Genre;
 import utiles.bookStatus;
 
 public class Books {
-    private int id;
+    private static int lastUsedId = 0;
+    private String id;
     private String title;
     private String author;
     private Genre genre;
     private bookStatus status;
 
-    public Books(int id, String title, String author, Genre genre, bookStatus status) {
-        this.id = id;
+    public Books(String title, String author, Genre genre, bookStatus status) {
+        this.id = generateUniqueId();
         this.title = title;
         this.author = author;
         this.genre = genre;
         this.status = status;
     }
 
-    public int getId() {
+    private static String generateUniqueId() {
+        lastUsedId++;
+        return String.format("BOOK%03d", lastUsedId);
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

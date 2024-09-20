@@ -1,48 +1,50 @@
 import java.util.*;
 import java.util.Map;
 import java.util.Scanner;
+
 import entity.Books;
 import entity.Users;
+import utiles.AppConstants;
 import utiles.subscriptionType;
 
 public class User {
     subscriptionType type;
 
     public static void registerUser(Scanner sc) {
-        System.out.print("Enter Your Name: ");
+        System.out.print(AppConstants.PROMPT_ENTER_USER_NAME);
         String userName = sc.nextLine();
 
-        System.out.print("Enter An Employee ID (ex: ATS112): ");
+        System.out.print(AppConstants.PROMPT_ENTER_USER_ID);
         String userId = sc.nextLine();
 
-        System.out.print("Enter your mail Id (ex: library@gmail.com): ");
+        System.out.print(AppConstants.PROMPT_ENTER_USER_EMAIL);
         String userMailId = sc.nextLine();
 
-        System.out.print("Subscription type (Free/Pro): ");
+        System.out.print(AppConstants.PROMPT_ENTER_SUBSCRIPTION_TYPE);
         String subTypeInput = sc.nextLine();
 
         if (validate(userId, "userId")) {
-            System.out.println("Invalid User ID format");
+            System.out.println(AppConstants.ERROR_USER_NOT_FOUND);
             return;
         }
 
         if (validate(userMailId, "email")) {
-            System.out.println("Invalid Email ID format");
+            System.out.println(AppConstants.INVAILD_EMAIL_ID);
             return;
         }
 
         subscriptionType subType = getSubscriptionType(subTypeInput);
         if (subType == null) {
-            System.out.println("Invalid subscription type. Please choose either Free or Pro.");
+            System.out.println(AppConstants.INVAILD_SUBSCRIPTION_TYPE);
             return;
         }
-        int borrowLimit = subType == subscriptionType.PRO ? 5 : 2;
+        int borrowLimit = subType == subscriptionType.PRO ? AppConstants.PRO_BORROW_LIMIT : AppConstants.FREE_BORROW_LIMIT;
 
         if (Library.users.containsKey(userId)) {
-            System.out.println("User ID already exists!");
+            System.out.println(AppConstants.USER_ALREADY_EXIST);
         } else {
             Library.users.put(userId, new Users(userName, userMailId, subType, borrowLimit));
-            System.out.println("User registered successfully!");
+            System.out.println(AppConstants.SUCCESS_USER_REGISTERED);
         }
     }
 
@@ -55,14 +57,12 @@ public class User {
                 Users userDetails = entry.getValue();
                 System.out.println("UserID: " + entry.getKey() + ", Name: " + userDetails.getName() + ", Email: " + userDetails.getEmail() + ", Subscription: " + userDetails.getSubType() + ", Borrow Limit: " + userDetails.getBorrowLimit());
                 List<Books> borrowedBooks = userDetails.getBorrowedBooks();
-                if (borrowedBooks == null) {
+                if (borrowedBooks.isEmpty()) {
                     System.out.println("   No borrowed books.");
                 } else {
                     System.out.println("   Borrowed Books:");
                     for (Books book : borrowedBooks) {
-                        System.out.println("      Title: " + book.getTitle()
-                                + ", Book Name: " + book.getTitle()
-                                + ", Author: " + book.getAuthor());
+                        System.out.println("   ➡️   Title: " + book.getTitle() + ", Book Name: " + book.getTitle() + ", Author: " + book.getAuthor());
                     }
                 }
             }
@@ -70,8 +70,8 @@ public class User {
     }
 
     private static boolean validate(String input, String type) {
-        String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-        String userIdRegex = "^ATS\\d{3}$";
+        String emailRegex = AppConstants.EMAIL_PATTERN;
+        String userIdRegex = AppConstants.USER_ID_PATTERN;
         switch (type) {
             case "email":
                 return !input.matches(emailRegex);
