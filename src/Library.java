@@ -1,34 +1,16 @@
-import entity.Books;
-import entity.Users;
-
 import java.util.*;
-
+import service.BookService;
+import service.UserService;
 import utiles.AppConstants;
-import utiles.AppConstants.*;
-import utiles.Genre;
-import utiles.bookStatus;
-import utiles.subscriptionType;
 
 public class Library {
-    public static List<Books> books = new ArrayList<>();
-    public static List<String> borrowedBooks = new ArrayList<>();
-    public static Map<String, Users> users = new HashMap<>();
 
     public static void main(String[] args) {
-        Book bookClass = new Book();
-        User userClass = new User();
         try {
             Scanner sc = new Scanner(System.in);
             boolean exit = false;
-
-            users.put("ATS112", new Users("Jeeva", "jeeva@gmail.com", subscriptionType.FREE, 2));
-            users.put("ATS113", new Users("Kabil", "Kabil@gmail.com", subscriptionType.PRO, 3));
-            users.put("ATS114", new Users("Pranav", "pranav@gmail.com", subscriptionType.FREE, 2));
-
-            books.add(new Books("Rich Dad Poor Dad", "Robert", Genre.SCI_FI, bookStatus.AVAILABLE));
-            books.add(new Books("Basketball", "Lebron james", Genre.NOVEL, bookStatus.AVAILABLE));
-            books.add(new Books("Football", "Messi", Genre.NOVEL, bookStatus.AVAILABLE));
-
+            BookService bookService = new BookService();
+            UserService userService = new UserService();
             while (!exit) {
                 System.out.println(AppConstants.MENU_HEADER);
                 System.out.println(AppConstants.MENU1);
@@ -46,22 +28,22 @@ public class Library {
 
                 switch (choice) {
                     case 1:
-                        bookClass.addBook(sc);
+                        bookService.addBook(sc);
                         break;
                     case 2:
-                        bookClass.borrowBook(sc);
+                        bookService.borrowBook(sc);
                         break;
                     case 3:
-                        bookClass.returnBook(sc);
+                        bookService.returnBook(sc);
                         break;
                     case 4:
-                        bookClass.viewBooks(sc);
+                        bookService.viewBooks(sc);
                         break;
                     case 5:
-                        userClass.registerUser(sc);
+                        userService.registerUser(sc);
                         break;
                     case 6:
-                        userClass.viewAllUsers();
+                        userService.viewAllUsers();
                         break;
                     case 7:
                         exit = true;
