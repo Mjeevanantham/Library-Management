@@ -12,10 +12,11 @@ import utiles.subscriptionType;
 public class UserService {
 
     public static Map<String, Users> users = new HashMap<>();
-    public UserService(){
-        users.put("ATS112", new Users("Jeeva", "jeeva@gmail.com", subscriptionType.FREE, 2));
-        users.put("ATS113", new Users("james", "Kabil@gmail.com", subscriptionType.PRO, 3));
-        users.put("ATS114", new Users("anand", "pranav@gmail.com", subscriptionType.FREE, 2));
+
+    public UserService() {
+        users.put("ATS112", new Users("Jeeva", "jeeva@gmail.com", subscriptionType.FREE, AppConstants.PRO_BORROW_LIMIT));
+        users.put("ATS113", new Users("james", "Kabil@gmail.com", subscriptionType.PRO, AppConstants.FREE_BORROW_LIMIT));
+        users.put("ATS114", new Users("anand", "pranav@gmail.com", subscriptionType.FREE, AppConstants.FREE_BORROW_LIMIT));
     }
 
     public void registerUser(Scanner sc) {

@@ -3,12 +3,14 @@ package service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 import entity.Books;
 import entity.Users;
 import utiles.AppConstants;
 import utiles.Genre;
 import utiles.bookStatus;
+
 import static service.UserService.users;
 
 public class BookService {
@@ -25,25 +27,91 @@ public class BookService {
     public void addBook(Scanner sc) {
         System.out.print(AppConstants.PROMPT_ENTER_USER_ID);
         String userId = sc.nextLine();
+
         if (users.containsKey(userId)) {
+            System.out.println(AppConstants.BOOK_MENU1);
+            System.out.println(AppConstants.BOOK_MENU2);
+            System.out.print(AppConstants.PROMPT_ENTER_CHOICE);
+            int choice = sc.nextInt();
+            sc.nextLine();
 
-            System.out.print(AppConstants.PROMPT_ENTER_BOOK_TITLE);
-            String bookName = sc.nextLine();
-
-            System.out.print(AppConstants.PROMPT_ENTER_BOOK_AUTHOR);
-            String bookAuthor = sc.nextLine();
-
-            System.out.print(AppConstants.PROMPT_ENTER_BOOK_GENRE);
-            String bookGenre = sc.nextLine();
-            if (getGenreType(bookGenre) == null) {
-                System.out.print(AppConstants.ENTER_VALID_GENRE);
-                return;
+            switch (choice) {
+                case 1:
+                    addSingleBook(sc);
+                    break;
+                case 2:
+                    addMultipleBooks(sc);
+                    break;
+                default:
+                    System.out.println("Invalid choice!");
+                    break;
             }
-            Books newBook = new Books(bookName, bookAuthor, getGenreType(bookGenre), bookStatus.AVAILABLE);
-            books.add(newBook);
-            System.out.println(AppConstants.SUCCESS_BOOK_ADDED);
         } else {
             System.out.println(AppConstants.ERROR_USER_NOT_FOUND);
+        }
+    }
+
+    private void addSingleBook(Scanner sc) {
+        System.out.print(AppConstants.PROMPT_ENTER_BOOK_TITLE);
+        String bookName = sc.nextLine();
+        for (Books book : books) {
+            if (book.getTitle().equalsIgnoreCase(bookName)) {
+                System.out.print(AppConstants.BOOK_ALREADY_EXIST);
+                break;
+            }
+        }
+        System.out.print(AppConstants.PROMPT_ENTER_BOOK_AUTHOR);
+        String bookAuthor = sc.nextLine();
+
+        System.out.print(AppConstants.PROMPT_ENTER_BOOK_GENRE);
+        String bookGenre = sc.nextLine();
+
+        Genre genre = getGenreType(bookGenre);
+        if (genre == null) {
+            System.out.println(AppConstants.ENTER_VALID_GENRE);
+            return;
+        }
+
+        Books newBook = new Books(bookName, bookAuthor, genre, bookStatus.AVAILABLE);
+        books.add(newBook);
+        System.out.println(AppConstants.SUCCESS_BOOK_ADDED);
+    }
+
+    private void addMultipleBooks(Scanner sc) {
+        System.out.print(AppConstants.PROMPT_ENTER_MULTIPLE_BOOK_TITLE);
+        String bookDetails = sc.nextLine();
+
+        StringTokenizer bookTokenizer = new StringTokenizer(bookDetails, ";");
+
+        while (bookTokenizer.hasMoreTokens()) {
+            String bookData = bookTokenizer.nextToken();
+            StringTokenizer detailsTokenizer = new StringTokenizer(bookData, ",");
+
+            if (detailsTokenizer.countTokens() == 3) {
+                String bookTitle = detailsTokenizer.nextToken().trim();
+                String bookAuthor = detailsTokenizer.nextToken().trim();
+                String bookGenre = detailsTokenizer.nextToken().trim();
+                Boolean IsAlreadyExist = false;
+                for (Books book : books) {
+                    if (book.getTitle().equalsIgnoreCase(bookTitle)) {
+                        IsAlreadyExist = true;
+                        break;
+                    }
+                }
+                if (IsAlreadyExist) {
+                    System.out.println(AppConstants.BOOK_ALREADY_EXIST);
+                    break;
+                }
+                Genre genre = getGenreType(bookGenre);
+                if (genre != null) {
+                    books.add(new Books(bookTitle, bookAuthor, genre, bookStatus.AVAILABLE));
+                    System.out.println("Book added: " + bookTitle);
+                } else {
+                    System.out.println(AppConstants.ENTER_VALID_GENRE);
+                }
+            } else {
+                System.out.println(AppConstants.ENTER_BOOK_FORMAT_GENRE + bookData);
+            }
         }
     }
 
@@ -132,20 +200,23 @@ public class BookService {
                 if (books.isEmpty()) {
                     System.out.println("No available books.");
                 } else {
-                    System.out.println("Available Books:");
+                    StringBuilder availableBooks = new StringBuilder("Available Books:\n");
                     for (Books book : books) {
-                        System.out.println("✅ " + book);
+                        availableBooks.append("✅ ").append(book.toString()).append("\n");
                     }
+                    System.out.println(availableBooks.toString());
+
                 }
                 break;
             case 2:
                 if (borrowedBooks.isEmpty()) {
                     System.out.println("No borrowed books.");
                 } else {
-                    System.out.println("Borrowed Books:");
+                    StringBuilder borrowedBooksList = new StringBuilder("Borrowed Books:\n");
                     for (String book : borrowedBooks) {
-                        System.out.println("❌ " + book);
+                        borrowedBooksList.append("❌ ").append(book).append("\n");
                     }
+                    System.out.println(borrowedBooksList.toString());
                 }
                 break;
             default:
